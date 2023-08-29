@@ -62,7 +62,7 @@ public class LocationController {
 		//PUT will expect full object to update. PATCH will need delta
 		Location existingLocation = locationRepository.findById(id).orElseThrow(() -> new Exception("Location " + id + " not found"));
 		BeanUtils.copyProperties(location, existingLocation, "location_id");
-		return locationRepository.saveAndFlush(location);
+		return locationRepository.saveAndFlush(existingLocation);
 	}
 
 }

@@ -62,7 +62,7 @@ public class UserController {
 		//PUT will expect full object to update. PATCH will need delta
 		User existingUser = userRepository.findById(id).orElseThrow(() -> new Exception("User " + id + " not found"));
 		BeanUtils.copyProperties(user, existingUser, "user_id");
-		return userRepository.saveAndFlush(user);
+		return userRepository.saveAndFlush(existingUser);
 	}
 
 }

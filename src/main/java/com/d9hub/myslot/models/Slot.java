@@ -12,8 +12,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,34 +32,29 @@ import lombok.Setter;
 @Getter 
 @Setter
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public  class Slot {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long slot_id;
 	
-	@Column(name = "slot_user_id", nullable = false)
-	private Long slot_user_id; // user who book the slot
+	@Column(name = "slot_start_time", nullable = false)
+	private LocalDate slot_start_time;
 	
-	@Column(name = "slot_user_name", nullable = false)
-	private String slot_user_name; // actual name or guests
+	@Column(name = "slot_end_time", nullable = false)
+	private LocalDate slot_end_time;
 	
-	@Column(name = "slot_time", nullable = false)
-	private LocalDate slot_time;
+	@Column(name = "slot_status", nullable = true)
+	private String slot_status;
 	
-	@Column(name = "slot_online_platform", nullable = true)
-	private String slot_online_platform;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "slot_user_id")
+	private User slot_user; // user
 	
-	@Column(name = "slot_online_link", nullable = true)
-	private String slot_online_link;
-	
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "slot_service_provider_id")
-	private ServiceProvider service_provider; // company or individual who provide the services
-	
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "slot_location_id")
-	private Location location; // location
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "slot_event_id")
+	private Event slot_event; // user
 		
 	public Slot() {
 		

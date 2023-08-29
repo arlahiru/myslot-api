@@ -64,7 +64,7 @@ public class ServiceProviderController {
 		//PUT will expect full object to update. PATCH will need delta
 		ServiceProvider exustingServiceProvider = serviceProviderRepository.findById(id).orElseThrow(() -> new Exception("ServiceProvider" + id + " not found"));
 		BeanUtils.copyProperties(serviceProvider, exustingServiceProvider, "service_provider_id");
-		return serviceProviderRepository.saveAndFlush(serviceProvider);
+		return serviceProviderRepository.saveAndFlush(exustingServiceProvider);
 	}
 
 }

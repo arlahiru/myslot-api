@@ -18,8 +18,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.d9hub.myslot.models.Slot;
-import com.d9hub.myslot.repositories.SlotRepository;
+import com.d9hub.myslot.models.Event;
+import com.d9hub.myslot.models.Location;
+import com.d9hub.myslot.repositories.EventRepository;
 
 /**
  * @author lruhunage
@@ -27,42 +28,48 @@ import com.d9hub.myslot.repositories.SlotRepository;
  */
 
 @RestController
-@RequestMapping("/api/v1/slots")
-public class SlotController {
+@RequestMapping("/api/v1/events")
+public class EventController {
 	
 	@Autowired
-	private SlotRepository slotRepository;
+	private EventRepository eventRepository;
 	
 	@GetMapping
-	public List<Slot> getAllSlots() {
-	   return slotRepository.findAll();
+	public List<Event> getAllEvents() {
+	   return eventRepository.findAll();
 	}
 	
+	@RequestMapping(value ="provider/{providerId}", method= RequestMethod.GET)
+	public List<Event> getAllEventsByServiceProvider(@PathVariable Long providerId) {
+	   return eventRepository.findAllEventsByProvider(providerId);
+	}
+	
+	
 	@RequestMapping(value ="{id}", method= RequestMethod.GET)
-	public ResponseEntity<Slot> get(@PathVariable Long id) throws Exception {
-		Slot slot = slotRepository.findById(id)
-	            .orElseThrow(() -> new Exception("Slot " + id + " not found"));
+	public ResponseEntity<Event> get(@PathVariable Long id) throws Exception {
+		Event event = eventRepository.findById(id)
+	            .orElseThrow(() -> new Exception("Event " + id + " not found"));
 		
-		return ResponseEntity.ok().body(slot);
+		return ResponseEntity.ok().body(event);
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Slot create(@RequestBody Slot slot) {
-		return slotRepository.saveAndFlush(slot);
+	public Event create(@RequestBody Event event) {
+		return eventRepository.saveAndFlush(event);
 	}
 	
 	@RequestMapping(value ="{id}", method= RequestMethod.DELETE)
 	public void delete(@PathVariable Long id) {
-		slotRepository.deleteById(id);
+		eventRepository.deleteById(id);
 	}
 	
 	@RequestMapping(value ="{id}", method= RequestMethod.PUT)
-	public Slot update(@PathVariable Long id,@RequestBody Slot slot) throws Exception {
+	public Event update(@PathVariable Long id,@RequestBody Event event) throws Exception {
 		//PUT will expect full object to update. PATCH will need delta
-		Slot existingSlot = slotRepository.findById(id).orElseThrow(() -> new Exception("Slot " + id + " not found"));
-		BeanUtils.copyProperties(slot, existingSlot, "slot_id");
-		return slotRepository.saveAndFlush(existingSlot);
+		Event existingEvent = eventRepository.findById(id).orElseThrow(() -> new Exception("Event " + id + " not found"));
+		BeanUtils.copyProperties(event, existingEvent, "event_id");
+		return eventRepository.saveAndFlush(existingEvent);
 	}
 
 }
