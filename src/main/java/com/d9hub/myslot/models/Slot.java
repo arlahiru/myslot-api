@@ -37,7 +37,8 @@ public  class Slot {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long slot_id;
+	@Column(name = "slot_id", nullable = false)
+	private Long id;
 	
 	@Column(name = "slot_start_time", nullable = false)
 	private LocalDate slot_start_time;
